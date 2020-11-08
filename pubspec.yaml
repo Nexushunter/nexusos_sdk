@@ -1,0 +1,20 @@
+name: nexusos_sdk
+description: System SDK For Nexus OS
+version: 0.0.1
+author: Hunter Breathat
+
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  crypto: ^2.1.5
+  logging: <=2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
