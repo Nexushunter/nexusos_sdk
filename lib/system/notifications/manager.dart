@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 import '../user.dart';
@@ -8,7 +9,7 @@ import 'notification.dart';
 /// The [NotificationManager] provides a system-wide notification manager. It
 /// ensures that notifications are delivered to the expected user and stores the
 /// current list of notifications in the event a user has logged out.
-class NotificationManager {
+class NotificationManager extends ChangeNotifier {
   static final _instance = NotificationManager._();
   NotificationManager._() : _logger = Logger("NotificationManager");
   factory NotificationManager() => _instance;
@@ -38,7 +39,13 @@ class NotificationManager {
     pending = _userPending[_current.username] ?? [];
   }
 
-  List<Notification> pending = [];
+  List<Notification> _pending = [];
+  set pending(List<Notification> pending) {
+    _pending = pending;
+    notifyListeners();
+  }
+
+  List<Notification> get pending => _pending;
 
   /// Tap into the most recently received [Notification].
   Stream<Notification> get alertStream {
