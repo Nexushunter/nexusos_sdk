@@ -14,21 +14,27 @@ import '../../utils/utils.dart';
 ///   * Home location (within the system)
 class User {
   /// This user's preferred [name].
-  String _name;
+  String name;
 
   /// This user's [username].
   ///
   // TODO: Update username once USER story for Nexus OS is defined. (Non-final: Breaking change in system)
   final String _username;
   EncryptedString _password;
-  String get name => _name;
   String get username => _username;
-  String get password => _password.toString();
+  String get passwd => _password.toString();
+  set password(EncryptedString passwd) {
+    _password = passwd;
+  }
+
   String get home => '/home/$_username/';
 
-  User({@required String username, String name, EncryptedString password})
-      : _username = username,
-        _name = name,
+  User({
+    @required String username,
+    String name,
+    @required EncryptedString password,
+  })  : _username = username,
+        name = name ?? username,
         _password = password;
 
   factory User.fromMap(Map<String, dynamic> userMap) => User(
@@ -42,18 +48,18 @@ class User {
   Map toMap() {
     return <String, dynamic>{
       "name": name,
-      "pw": password,
+      "pw": passwd,
       "username": username,
     };
   }
 
   @override
   String toString() {
-    return '"name":"$name","username":"$username","pw":"$password"';
+    return '"name":"$name","username":"$username","pw":"$passwd"';
   }
 
   operator ==(Object other) => (other is User)
-      ? other.username == _username && other.name == _name
+      ? other.username == _username && other.name == name
       : false;
 
   @override

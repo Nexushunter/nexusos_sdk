@@ -10,9 +10,7 @@ import 'notification.dart';
 /// ensures that notifications are delivered to the expected user and stores the
 /// current list of notifications in the event a user has logged out.
 class NotificationManager extends ChangeNotifier {
-  static final _instance = NotificationManager._();
-  NotificationManager._() : _logger = Logger("NotificationManager");
-  factory NotificationManager() => _instance;
+  NotificationManager() : _logger = Logger("NotificationManager");
 
   final Logger _logger;
   User _current;
@@ -28,7 +26,7 @@ class NotificationManager extends ChangeNotifier {
 
       // Write the state of the original user's notifications
       final userEntries = <String, List<Notification>>{
-        '${_current.username}': pending,
+        '${_current.username}': _pending,
       };
       _userPending.addAll(userEntries);
     }
@@ -47,30 +45,30 @@ class NotificationManager extends ChangeNotifier {
 
   List<Notification> get pending => _pending;
 
-  /// Tap into the most recently received [Notification].
-  Stream<Notification> get alertStream {
-    return Stream.fromIterable(
-      pending.getRange(
-        0,
-        (pending.length >= 1)
-            ? 1
-            : 0, // In the event that there are no entries return []
-      ),
-    );
-  }
+  Stream<Notification> get pendingNotifications =>
+      Stream.fromIterable(_pending);
 
   Map<String, List<Notification>> _userPending = {};
+  Map<String, List<Notification>> get allExternalPending => _userPending;
 
   /// Push a [notification] to this manager.
   ///
   /// Pushes a [notification] for the specified [user], by default this is the
   /// [_current] user registered with this manager.
-  push(Notification notification, {User user}) {
+  bool create(Notification notification) {
     _logger.fine("Adding $notification");
-    if (user == null) {
-      _userPending['${user.username}'].add(notification);
-    } else {
-      pending = [notification, ...pending];
+    if (notification.user == null && _current == null) {
+      return false;
     }
+    if (notification.user == null) {
+      _userPending['${_current.username}'].add(notification);
+    } else {
+      pending = [notification, ..._pending];
+    }
+    return true;
+  }
+
+  void clear() {
+    pending = [];
   }
 }

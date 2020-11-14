@@ -10,17 +10,14 @@ import 'application.dart';
 /// Manages all of the current running application started within
 /// Nexus Desktop Environment.
 class ApplicationManager {
-  // Create a singleton instance of the manager
-  static final _instance = ApplicationManager._();
-  ApplicationManager._() {
+  ApplicationManager() {
     _getInstalledApplications();
   }
-  factory ApplicationManager() => _instance;
   final _logger = Logger('ApplicationManager');
 
   /// The list of [running] applications
   List<Application> _applications = [];
-  get running => _applications;
+  List<Application> get running => _applications;
 
   /// This system's list of [installed] applications.
   List<Application> _installed = [];
