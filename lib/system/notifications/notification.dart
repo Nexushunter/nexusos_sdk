@@ -49,9 +49,9 @@ class Notification {
     return {
       'title': title,
       'msg': message,
-      // 'appName': applicationName,
+      'appName': applicationName,
       // 'iconPath': icon.image.toString(),
-      // 'user': user.toString(),
+      'user': user.username,
     };
   }
 }
